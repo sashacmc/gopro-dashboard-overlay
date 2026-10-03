@@ -358,8 +358,8 @@ usage: gopro-dashboard.py [-h] [--font FONT] [--privacy PRIVACY] [--generate {de
                           [--cache-dir CACHE_DIR] [--profile PROFILE] [--double-buffer] [--ffmpeg-dir FFMPEG_DIR]
                           [--load {ACCL,GRAV,CORI} [{ACCL,GRAV,CORI} ...]] [--gpx GPX]
                           [--gpx-merge {EXTEND,OVERWRITE}] [--use-gpx-only]
-                          [--video-time-start {file-created,file-modified,file-accessed}]
-                          [--video-time-end {file-created,file-modified,file-accessed}]
+                          [--video-time-start {file-created,file-modified,file-accessed,mp4-created}]
+                          [--video-time-end {file-created,file-modified,file-accessed,mp4-created}]
                           [--map-style {osm,tf-cycle,tf-transport,tf-landscape,tf-outdoors,tf-transport-dark,tf-spinal-map,tf-pioneer,tf-mobile-atlas,tf-neighbourhood,tf-atlas,geo-osm-carto,geo-osm-bright,geo-osm-bright-grey,geo-osm-bright-smooth,geo-klokantech-basic,geo-osm-liberty,geo-maptiler-3d,geo-toner,geo-toner-grey,geo-positron,geo-positron-blue,geo-positron-red,geo-dark-matter,geo-dark-matter-brown,geo-dark-matter-dark-grey,geo-dark-matter-dark-purple,geo-dark-matter-purple-roads,geo-dark-matter-yellow-roads,local}]
                           [--map-api-key MAP_API_KEY] [--layout {default,speed-awareness,xml}]
                           [--layout-xml LAYOUT_XML] [--exclude EXCLUDE [EXCLUDE ...]]
@@ -421,13 +421,13 @@ GPX Only:
 
   --use-gpx-only, --use-fit-only
                         Use only the GPX/FIT file - no GoPro location data (default: False)
-  --video-time-start {file-created,file-modified,file-accessed,video-created}
+  --video-time-start {file-created,file-modified,file-accessed,mp4-created,video-created}
                         Use file/video dates for aligning video and GPS information, only when --use-gpx-only.
-                        'video-created' reads the creation_time embedded in the MP4 metadata - 
+                        'mp4-created' and 'video-created' read the creation_time embedded in MP4 metadata -
                         EXPERIMENTAL! - may be changed/removed (default: None)
-  --video-time-end {file-created,file-modified,file-accessed,video-created}
+  --video-time-end {file-created,file-modified,file-accessed,mp4-created,video-created}
                         Use file/video dates for aligning video and GPS information, only when --use-gpx-only.
-                        'video-created' reads the creation_time embedded in the MP4 metadata -
+                        'mp4-created' and 'video-created' read the creation_time embedded in MP4 metadata -
                         EXPERIMENTAL! - may be changed/removed (default: None)
 
 Mapping:

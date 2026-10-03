@@ -124,12 +124,15 @@ def gopro_dashboard_arguments(args=None):
 
     only.add_argument("--use-gpx-only", "--use-fit-only", action="store_true",
                       help="Use only the GPX/FIT file - no GoPro location data")
-    only.add_argument("--video-time-start", choices=["file-created", "file-modified", "file-accessed", "video-created"],
+    only.add_argument("--full-timeseries-journey", action="store_true",
+                      help="Use the full timeseries for the journey")
+    video_time_choices = ["file-created", "file-modified", "file-accessed", "mp4-created", "video-created"]
+    only.add_argument("--video-time-start", choices=video_time_choices,
                       help="Use file/video dates for aligning video and GPS information, only when --use-gpx-only. "
-                           "'video-created' reads the creation_time embedded in the MP4 metadata.")
-    only.add_argument("--video-time-end", choices=["file-created", "file-modified", "file-accessed", "video-created"],
+                           "'mp4-created' and 'video-created' read the creation_time embedded in the MP4 metadata.")
+    only.add_argument("--video-time-end", choices=video_time_choices,
                       help="Use file/video dates for aligning video and GPS information, only when --use-gpx-only. "
-                           "'video-created' reads the creation_time embedded in the MP4 metadata.")
+                           "'mp4-created' and 'video-created' read the creation_time embedded in the MP4 metadata.")
 
     maps = parser.add_argument_group("Mapping", "Display of Maps")
 
