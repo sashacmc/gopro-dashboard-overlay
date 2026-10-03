@@ -14,9 +14,11 @@ from gopro_overlay.ffmpeg import FFMPEG
 from gopro_overlay.ffmpeg_gopro import FFMPEGGoPro
 from gopro_overlay.ffmpeg_overlay import FFMPEGOverlay, FFMPEGOptions, FFMPEGOverlayVideo
 from gopro_overlay.timeunits import timeunits
+from test_timeseries import datetime_of
 
 ffprobe_output = (Path(__file__).parent / "test_ffmpeg_ffprobe_output.json").read_text()
 
+ffprobe_output_dji = (Path(__file__).parent / "test_ffmpeg_ffprobe_output_dji.json").read_text()
 
 @dataclasses.dataclass(frozen=True)
 class Invocation:
@@ -96,7 +98,7 @@ def test_parsing_stream_information():
 
     exe = FFMPEG(invoke_fn=fake_invoke(
         Invocation(
-            args=["ffprobe", "-hide_banner", "-print_format", "json", "-show_streams", "whatever"],
+            args=["ffprobe", "-hide_banner", "-print_format", "json", "-show_streams", "-show_format", "whatever"],
             stdout=ffprobe_output
         ),
         Invocation(
@@ -136,6 +138,26 @@ def test_parsing_stream_information():
 
     assert streams.file.length == 9876
 
+    import datetime
+    assert streams.creation_time == datetime.datetime(2021, 9, 17, 9, 35, 17, tzinfo=datetime.timezone.utc)
+
+def test_parsing_stream_information_from_dji():
+    def stat(file):
+        return stat_result([000, 1234, 123, 1, 1000, 1000, 9876, 10, 20, 30])
+
+    exe = FFMPEG(invoke_fn=fake_invoke(
+        Invocation(
+            args=["ffprobe", "-hide_banner", "-print_format", "json", "-show_streams", "-show_format", "whatever"],
+            stdout=ffprobe_output_dji
+        ),
+    ))
+
+    streams = FFMPEGGoPro(exe).find_recording(Path("whatever"), stat=stat)
+
+    assert streams.video.stream == 0
+    assert streams.audio.stream == 1
+    assert streams.data is None
+
 
 class FakePopen:
     def __init__(self):
@@ -169,7 +191,8 @@ def test_ffmpeg_generate_execute():
         ffmpeg=FFMPEG(),
         output=Path("output"),
         overlay_size=Dimension(100, 200),
-        execution=fake
+        execution=fake,
+        creation_time=datetime_of(1231233223.12344)
     )
 
     with ffmpeg.generate():
@@ -189,6 +212,7 @@ def test_ffmpeg_generate_execute():
         "-r", "30",  # output framerate
         "-vcodec", "libx264",  # output format
         "-preset", "veryfast",  # output quality/encoding preset
+        '-metadata','creation_time=2009-01-06T09:13:43.123440+00:00',
         "output"  # output file
     ]
 
@@ -201,7 +225,8 @@ def test_ffmpeg_overlay_execute_default():
         input=Path("input"),
         output=Path("output"),
         overlay_size=Dimension(3, 4),
-        execution=fake
+        execution=fake,
+        creation_time=datetime_of(1231233223.12344)
     )
 
     with ffmpeg.generate():
@@ -221,6 +246,7 @@ def test_ffmpeg_overlay_execute_default():
         "-filter_complex", "[0:v][1:v]overlay",  # overlay input 1 on input 0
         "-vcodec", "libx264",
         "-preset", "veryfast",
+        '-metadata', 'creation_time=2009-01-06T09:13:43.123440+00:00',
         "output"
     ]
 
@@ -230,11 +256,12 @@ def test_ffmpeg_overlay_execute_options():
 
     ffmpeg = FFMPEGOverlayVideo(
         ffmpeg=FFMPEG(),
-        input="input",
-        output="output",
+        input=Path("input"),
+        output=Path("output"),
         options=FFMPEGOptions(input=["-input-option"], output=["-output-option"]),
         overlay_size=Dimension(3, 4),
-        execution=fake
+        execution=fake,
+        creation_time=datetime_of(1231233223.12344)
     )
 
     with ffmpeg.generate():
@@ -254,6 +281,7 @@ def test_ffmpeg_overlay_execute_options():
         "-i", "-",  # input 1
         "-filter_complex", "[0:v][1:v]overlay",  # overlay input 1 on input 0
         "-output-option",  # output option goes before output
+        '-metadata', 'creation_time=2009-01-06T09:13:43.123440+00:00',
         "output"
     ]
 

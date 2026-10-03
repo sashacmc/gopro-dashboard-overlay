@@ -2,6 +2,24 @@
 # Changelog
 
 Newest changes are always in [README.md](README.md)
+- 0.115.0 [Fix] Previous smoothing had some issues - hopefully sorted. Many thanks to [@neri14](https://github.com/neri14) for pointing this out. Fixed possible issue with ffmpeg exiting before writing MOOV - sometimes could result in unplayable MP4 files.
+- 0.114.0 [Enhancement] Huge Improvement to usability of speed gauges! - Speed was not being smoothed. Now a kalman filter is applied to speed, giving a much better result.
+  See below for before and after. This stops the speed gauges flickering between values.
+- [Breaking/Minor] Removed the decimal values for altitude & gradient in the default layouts - they were distracting as they changed too much.
+
+![Speed Gauge Before Smoothing](examples/2023-11-26-speed-no-smoothing.png)
+![Speed Gauge After Smoothing](examples/2023-11-26-speed-with-smoothing.png)
+
+- 0.113.0 [Enhancement] Add arc gauge - See [Arc Gauge Docs](docs/xml/examples/06-cairo-gauge-arc-annotated/README.md) for examples
+- 0.112.0 [Enhancement] Show loading speed of gopro data.
+- 0.111.0 [Fix] Simple Fix for #157 - timeout when reading large data files. Thanks to [@rpoxo](https://github.com/rpoxo) for raising.
+- 0.110.0 [Fix] Hopefully make the 'pace' units more robust. New metric format "pace".
+- 0.109.0 [Feature] Support for new GPS9 data type - should give more accurate GPS. Supported on Hero11+
+- 0.108.0 [Fix] GPX/GoPro overlay date checking had been broken for a while. Thanks (very much) to [@IbnGit](https://github.com/IbnGit) for raising
+- 0.107.0 [Feature] New units! - "spm" - steps per minute, and "pace" - see [metrics docs](docs/xml/examples/04-metrics/README.md) for full explanation Thanks [@SlippyJimmy](https://github.com/SlippyJimmy)
+- 0.106.0 [Feature] New map style "cyclosm" - see: https://www.cyclosm.org/ - An OpenStreetmap for cycling - See map examples for more
+- 0.105.0 [Behaviour Change]  Fix [#150](https://github.com/time4tea/gopro-dashboard-overlay/issues/150) cairo circuit map aspect raio is wrong. Thanks [@yuanduopeng](https://github.com/yuanduopeng) for raising.
+- 0.104.0 [Fix] Honour cmdline arg `--show-ffmpeg`
 - 0.103.0 [Feature] Initial Windows Support! See Windows Installation Instructions.
 - 0.102.0 [Feature] Support for alternate GoPro Max ORIN. Indicate when no GPS information found in file. Thanks [@xiaoxin01](https://github.com/xiaoxin01), [@ilisparrow](https://github.com/ilisparrow)  
 - 0.101.0 [Fix] Fix error when loading FIT files that had GPS Accuracy information. Thanks [@rpellerin](https://github.com/rpellerin) 

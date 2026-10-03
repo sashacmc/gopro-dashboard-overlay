@@ -121,32 +121,36 @@ The following metrics are supported:
 
 Currently, there is no mechanism to calculate the overall acceleration, this will come in a future version.
 
-| Metric    | Source    | Description                                                       | Unit |
-|-----------|-----------|-------------------------------------------------------------------|----------------------|
-| hr        | gpx       | Heart Rate                                                        | beats / minute |
-| cadence   | gpx       | Cadence                                                           | revolutions / minute |
-| power     | gpx       | Power                                                             | watts |
-| speed     | gopro gpx | Speed (as reported by device if available, or fallback to cspeed) | metres / second |
-| cspeed    | gopro gpx | Computed Speed  (derived from location delta)                     | metres / second |
-| temp      | gpx       | Ambient Temperature                                               | degrees C |
-| gradient  | gopro gpx | Gradient of Ascent                                                | - |
-| alt       | gopro gpx | Height above sea level                                            | metres |
-| odo       | gopro gpx | Distance since start                                              | metres |
-| dist      | gopro gpx | Distance since last point                                         | metres |
-| azi       | gopro gpx | Azimuth                                                           | degree |
-| cog       | gopro gpx | Course over Ground                                                | degree |
-| lat       | gopro gpx | Latitude                                                          | - |
-| lon       | gopro gpx | Longitude                                                         | - |
-| accel     | gopro gpx | Acceleration - Computed from speed                                | m/s² |
-| accl.x    | gopro     | Acceleration - X Axis                                             | m/s² |
-| accl.y    | gopro     | Acceleration - Y Axis                                             | m/s² |
-| accl.z    | gopro     | Acceleration - Z Axis                                             | m/s² |
-| grav.x    | gopro     | Gravity Vector - X Axis                                           | - |
-| grav.y    | gopro     | Gravity Vector - Y Axis                                           | - |
-| grav.z    | gopro     | Gravity Vector - Z Axis                                           | - |
-| ori.pitch | gopro     | Orientation - Pitch                                               | radians |
-| ori.roll  | gopro     | Orientation - Roll                                                | radians |
-| ori.yaw   | gopro     | Orientation - Yaw                                                 | radians |
+| Metric    | Source | Description                                                       | Unit |
+|-----------|-------|-------------------------------------------------------------------|----------------------|
+| hr        | gpx      fit | Heart Rate                                                        | beats / minute |
+| cadence   | gpx      fit | Cadence                                                           | revolutions / minute |
+| power     | gpx      fit | Power                                                             | watts |
+| speed     | gopro gpx fit | Speed (as reported by device if available, or fallback to cspeed) | metres / second |
+| cspeed    | gopro gpx fit | Computed Speed  (derived from location delta)                     | metres / second |
+| temp      | gpx       fit | Ambient Temperature                                               | degrees C |
+| gradient  | gopro gpx fit | Gradient of Ascent                                                | - |
+| alt       | gopro gpx fit | Height above sea level                                            | metres |
+| odo       | gopro gpx fit | Distance since start                                              | metres |
+| dist      | gopro gpx fit | Distance since last point                                         | metres |
+| azi       | gopro gpx fit | Azimuth                                                           | degree |
+| cog       | gopro gpx fit | Course over Ground                                                | degree |
+| lat       | gopro gpx fit | Latitude                                                          | - |
+| lon       | gopro gpx fit | Longitude                                                         | - |
+| accel     | gopro gpx fit | Acceleration - Computed from speed                                | m/s² |
+| accl.x    | gopro | Acceleration - X Axis                                             | m/s² |
+| accl.y    | gopro | Acceleration - Y Axis                                             | m/s² |
+| accl.z    | gopro | Acceleration - Z Axis                                             | m/s² |
+| grav.x    | gopro | Gravity Vector - X Axis                                           | - |
+| grav.y    | gopro | Gravity Vector - Y Axis                                           | - |
+| grav.z    | gopro | Gravity Vector - Z Axis                                           | - |
+| ori.pitch | gopro | Orientation - Pitch                                               | radians |
+| ori.roll  | gopro | Orientation - Roll                                                | radians |
+| ori.yaw   | gopro | Orientation - Yaw                                                 | radians |
+| respiration | fit   | Respiration Rate | brpm / brps - Breaths Per Minute / Second |
+| gear.front | fit   | Front Gear Number | - |
+| gear.rear | fit   | Rear Gear Number | - |
+| sdps | fit | Sensor Distance Per Stroke ( Vaaka Cadence Sensor ) | cm |
 
 # Axes of Acceleration & Rotation
 

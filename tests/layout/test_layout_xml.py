@@ -4,7 +4,7 @@ from gopro_overlay.layout_components import metric_value
 from gopro_overlay.layout_xml import metric_accessor_from, date_formatter_from, Converters, quantity_formatter_for
 from gopro_overlay.timeseries import Entry
 from gopro_overlay.units import units
-from tests.test_timeseries import datetime_of
+from test_timeseries import datetime_of
 
 
 def test_metric_accessor_speed():
@@ -14,6 +14,20 @@ def test_metric_accessor_speed():
 
     assert metric_accessor_from("speed")(entry) == speed
     assert metric_accessor_from("cspeed")(entry) == cspeed
+
+def test_metric_accessor_respiration():
+    resp = units.Quantity(10, units.brpm)
+    entry = Entry(datetime_of(0), respiration=resp)
+
+    assert metric_accessor_from("respiration")(entry) == resp
+
+def test_metric_accessor_gears():
+    front = units.Quantity(5)
+    back = units.Quantity(10)
+    entry = Entry(datetime_of(0), gear_front=front, gear_rear=back)
+
+    assert metric_accessor_from("gear.front")(entry) == front
+    assert metric_accessor_from("gear.rear")(entry) == back
 
 
 def test_metric_accessor_speed_fallback():

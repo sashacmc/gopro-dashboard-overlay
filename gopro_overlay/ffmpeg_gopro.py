@@ -72,14 +72,14 @@ class FFMPEGGoPro:
                 "-hide_banner",
                 "-print_format", "json",
                 "-show_streams",
-                "-show_entries", "stream_tags:format_tags",
+                "-show_format",
                 filepath
             ]
         ).stdout)
 
         ffprobe_json = json.loads(ffprobe_output)
 
-        video_selector = lambda s: s["codec_type"] == "video"
+        video_selector = lambda s: s["codec_type"] == "video" and s["disposition"]["default"] == 1
         audio_selector = lambda s: s["codec_type"] == "audio"
         data_selector = lambda s: s["codec_type"] == "data" and s["codec_tag_string"] == "gpmd"
 
@@ -128,15 +128,14 @@ class FFMPEGGoPro:
         else:
             data_stream = None
 
-        creationDateTime = None
-        try:
-            current_tz = datetime.datetime.now(datetime.timezone.utc).astimezone().utcoffset()
-            creationDateTime = datetime.datetime.fromisoformat(
-                ffprobe_json["format"]["tags"]["creation_time"][:-1]
-            ).replace(tzinfo=datetime.timezone(current_tz))
-        except KeyError:
-            pass 
-
+        creation_time = None
+        format_tags = ffprobe_json.get("format", {}).get("tags", {})
+        ct_str = format_tags.get("creation_time")
+        if ct_str:
+            try:
+                creation_time = datetime.datetime.fromisoformat(ct_str.replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                pass
 
         return GoproRecording(
             ffmpeg=self.exe,
@@ -145,7 +144,7 @@ class FFMPEGGoPro:
             audio=audio_stream,
             video=video_stream,
             data=data_stream,
-            creationDateTime=creationDateTime
+            creation_time=creation_time
         )
 
     def load_frame(self, filepath: Path, at_time: Timeunit) -> Optional[bytes]:
@@ -213,7 +212,7 @@ class GoproRecording:
     audio: Optional[AudioStream]
     video: VideoStream
     data: Optional[DataStream]
-    creationDateTime: datetime.datetime
+    creation_time: Optional[datetime.datetime] = None
 
     def load_data(self) -> bytes:
         track = self.data.stream

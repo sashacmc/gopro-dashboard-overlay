@@ -154,18 +154,24 @@ if __name__ == "__main__":
                         duration = recording.video.duration
 
                         fns = {
-                            "file-created": lambda f: f.file.ctime,
-                            "file-modified": lambda f: f.file.mtime,
-                            "file-accessed": lambda f: f.file.atime,
-                            "mp4-created": lambda f: f.creationDateTime
+                            "file-created": lambda f: recording.file.ctime,
+                            "file-modified": lambda f: recording.file.mtime,
+                            "file-accessed": lambda f: recording.file.atime,
+                            "mp4-created": lambda f: recording.creation_time,
+                            "video-created": lambda f: recording.creation_time,
                         }
 
                         if args.video_time_start:
                             start_date = fns[args.video_time_start](recording)
+                            if start_date is None:
+                                fatal("No creation_time found in video metadata. Try --video-time-start file-modified instead.")
                             end_date = start_date + duration.timedelta()
 
                         if args.video_time_end:
-                            start_date = fns[args.video_time_end](recording) - duration.timedelta()
+                            start_date = fns[args.video_time_end](recording)
+                            if start_date is None:
+                                fatal("No creation_time found in video metadata. Try --video-time-end file-modified instead.")
+                            start_date -= duration.timedelta()
                             end_date = start_date + duration.timedelta()
 
                     else:
@@ -321,7 +327,8 @@ if __name__ == "__main__":
                         output=output,
                         options=ffmpeg_options,
                         overlay_size=dimensions,
-                        execution=execution
+                        execution=execution,
+                        creation_time=frame_meta.date_at(frame_meta.min)
                     )
                 else:
                     output.unlink(missing_ok=True)
@@ -331,7 +338,8 @@ if __name__ == "__main__":
                         output=output,
                         options=ffmpeg_options,
                         overlay_size=dimensions,
-                        execution=execution
+                        execution=execution,
+                        creation_time=frame_meta.date_at(frame_meta.min)
                     )
 
                 draw_timer = PoorTimer("drawing frames")

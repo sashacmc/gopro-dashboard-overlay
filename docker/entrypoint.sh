@@ -15,7 +15,7 @@ function show_available() {
     echo ".. these should either be below current directory, or use additional volume mounts"
 }
 
-set -x
+# set -x
 
 program=$1
 shift

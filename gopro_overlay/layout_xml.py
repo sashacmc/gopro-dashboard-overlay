@@ -296,6 +296,10 @@ def metric_accessor_from(name: str) -> Callable[[Entry], Optional[pint.Quantity]
         "gps-packet-index": lambda e: e.packet_index,
         "gps-lock": lambda e: e.gpslock,
 
+        "respiration": lambda e: e.respiration,
+        "gear.front": lambda e: e.gear_front,
+        "gear.rear": lambda e: e.gear_rear,
+
         "accl.x": lambda e: e.accl.x if e.accl else None,
         "accl.y": lambda e: e.accl.y if e.accl else None,
         "accl.z": lambda e: e.accl.z if e.accl else None,
@@ -307,6 +311,7 @@ def metric_accessor_from(name: str) -> Callable[[Entry], Optional[pint.Quantity]
         "ori.yaw": lambda e: e.ori.yaw if e.ori else None,
         "lat": lambda e: units.Quantity(e.point.lat, units.location),
         "lon": lambda e: units.Quantity(e.point.lon, units.location),
+        "sdps": lambda e: e.sdps, # Vaaka cadence sensor distance-per-stroke field
     }
     if name in accessors:
         return accessors[name]
@@ -489,7 +494,7 @@ class Widgets:
             rotate=battrib(element, "rotate", d=True)
         )
 
-    @allow_attributes({"x", "y", "size", "corner_radius", "opacity"})
+    @allow_attributes({"x", "y", "size", "corner_radius", "opacity", "fill", "line-width", "loc-fill", "loc-outline", "loc-size"})
     def create_journey_map(self, element: ET.Element, entry, **kwargs) -> Widget:
         return journey_map(
             at(element),
@@ -500,10 +505,15 @@ class Widgets:
             fulltimeseries=self.fulltimeseries,
             size=iattrib(element, "size", d=256),
             corner_radius=iattrib(element, "corner_radius", 0),
-            opacity=fattrib(element, "opacity", 0.7, r=FloatRange(0.0, 1.0))
+            opacity=fattrib(element, "opacity", 0.7, r=FloatRange(0.0, 1.0)),
+            line_fill=rgbattr(element, "fill", d=(255, 0, 0)),
+            line_width=iattrib(element, "line-width", d=4),
+            marker_fill=rgbattr(element, "loc-fill", d=(0, 0, 255)),
+            marker_outline=rgbattr(element, "loc-outline", d=(0, 0, 0)),
+            marker_size=iattrib(element, "loc-size", d=6)
         )
 
-    @allow_attributes({"size", "zoom"})
+    @allow_attributes({"size", "zoom", "fill", "line-width", "loc-fill", "loc-outline", "loc-size"})
     def create_moving_journey_map(self, element: ET.Element, entry, **kwargs) -> Widget:
         return MovingJourneyMap(
             location=lambda: entry().point,
@@ -512,7 +522,12 @@ class Widgets:
             fulltimeseries=self.fulltimeseries,
             timeseries=self.framemeta,
             size=iattrib(element, "size", d=256),
-            zoom=iattrib(element, "zoom", d=16, r=range(1, 20))
+            zoom=iattrib(element, "zoom", d=16, r=range(1, 20)),
+            line_fill=rgbattr(element, "fill", d=(255, 0, 0)),
+            line_width=iattrib(element, "line-width", d=4),
+            marker_fill=rgbattr(element, "loc-fill", d=(0, 0, 255)),
+            marker_outline=rgbattr(element, "loc-outline", d=(0, 0, 0)),
+            marker_size=iattrib(element, "loc-size", d=6)
         )
 
     @allow_attributes({"size", "fill", "outline", "fill_width", "outline_width"})
@@ -535,12 +550,12 @@ class Widgets:
 
     @allow_attributes({"x", "y", "metric", "units", "seconds",
                        "samples", "values", "textsize", "filled",
-                       "height", "bg", "fill", "line", "text"})
+                       "height", "width", "marker-size", "bg", "fill", "line", "text"})
     def create_chart(self, element: ET.Element, entry, **kwargs) -> Widget:
         accessor = metric_accessor_from(attrib(element, "metric", d="alt"))
         converter = self.converters.converter(attrib(element, "units", d="metres"))
 
-        def value(e):
+        def metric_key(e):
             v = accessor(e)
             if v is not None:
                 v = converter(v)
@@ -551,7 +566,7 @@ class Widgets:
             self.framemeta,
             duration=timeunits(seconds=iattrib(element, "seconds", d=5 * 60)),
             samples=iattrib(element, "samples", d=256),
-            key=value
+            key=metric_key
         )
 
         title = self._font(element, "textsize", d=16)
@@ -566,6 +581,10 @@ class Widgets:
                 font=title,
                 filled=battrib(element, "filled", d=True),
                 height=iattrib(element, "height", d=64),
+                width=iattrib(element, "width", d=None),
+                marker_time_fn=lambda: entry().timestamp.magnitude,
+                window_tick_ms=window.tick.millis(),
+                marker_size=iattrib(element, "marker-size", d=4),
                 bg=rgbattr(element, "bg", d=(0, 0, 0, 170)),
                 fill=rgbattr(element, "fill", d=(91, 113, 146, 170)),
                 line=rgbattr(element, "line", d=(255, 255, 255, 170)),

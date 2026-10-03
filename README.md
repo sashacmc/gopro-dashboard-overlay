@@ -20,17 +20,18 @@ Discuss on [GitHub Discussions](https://github.com/time4tea/gopro-dashboard-over
 
 ## Examples
 
-![Example Dashboard Image](examples/2022-05-15-example.png)
-![Example Dashboard Image](examples/2022-06-11-contrib-example.png)
-![Example Dashboard Image](examples/2022-07-19-contrib-example-plane.jpg)
-![Example Dashboard Image](examples/2023-07-23-contrib-example-ski-pov.png)
-![Example Dashboard Image](examples/2023-07-23-contrib-example-ski-drone.png)
+![Example - Chedder Gorge](examples/2022-05-15-example.png)
+![Example - Rallye Des Cimes](examples/2026-05-16-rallye-des-cimes-contrib-example.png)
+![Example - GoKarting](examples/2022-06-11-contrib-example.png)
+![Example - Light Plane Cockpit](examples/2022-07-19-contrib-example-plane.jpg)
+![Example - Skiing First Person](examples/2023-07-23-contrib-example-ski-pov.png)
+![Example - Skiing Drone](examples/2023-07-23-contrib-example-ski-drone.png)
 
 An Example of 'overlay only' mode, which generates movies from GPX files
 ![Example Dashboard Image](examples/2022-11-24-gpx-only-overlay.png)
 
 Example from [examples/layout](examples/layout)
-![Example Dashboard Image](examples/layout/layout-cairo-2704x1520.png)
+![Example - Richmond Park with Cairo Widgets](examples/layout/layout-cairo-2704x1520.png)
 
 ## Map Styles
 
@@ -169,6 +170,8 @@ You can cut a section of the gopro file, with metadata.
 
 ## Related Software
 
+- https://github.com/Romancha/GPStitch - A VERY nice web user interface for this program.
+
 - https://github.com/julesgraus/interactiveGoProDashboardTool - An interactive helper to build the command line for the dashboard program
 
 ## Known Bugs / Issues
@@ -197,13 +200,25 @@ https://coderunner.io/how-to-compress-gopro-movies-and-keep-metadata/
 
 ## Other Related Software
 
-https://github.com/progweb/gpx2video
 
-https://github.com/JuanIrache/gopro-telemetry
+- https://github.com/progweb/gpx2video
+
+- https://github.com/JuanIrache/gopro-telemetry
 
 ## Latest Changes
 
 If you find any issues with new releases, please discuss in [GitHub Discussions](https://github.com/time4tea/gopro-dashboard-overlay/discussions)
+- 0.134.0 - [Fix] Don't crash when GRAV entries have wrong number of components (firmware bug workaround) - thanks [@joepetjr](https://github.com/joepetjr) for report & suggested fix
+  - [Fix] Fix typo in bbox calculation - thanks [@djm300](https://github.com/djm300)
+- 0.133.0 - [Enhancement] Chart - Add `width` and `marker-size`, better interpolation of datapoints at end of file, and use date from video file, with `--video-time-start video-start` - thanks to [@derFunk](https://github.com/derFunk) for contributing
+- 0.132.0 - [Enhancement] Use user-supplied unit pref for chart - thanks to [@DonkeyShine](https://github.com/DonkeyShine) for noticing
+- 0.131.0 [Enhancement] - Improved parsing of FIT files with gear changes thanks to  [@geomandolyn](https://github.com/geomandolyn) to raising issue & sample data.
+- 0.130.0 [Enhancement] - New capability to update the journey map & moving journey map - path and location styling.  Mulţumesc mult to [@andrei-micuda](https://github.com/andrei-micuda)
+  - [Hopefully no visible effect] Vendored / Copied in source code from geotiler as it's no longer compatible with new python versions & updated to be compatible. 
+- 0.129.0 [Enhancement] [Breaking] - Update python compatibility - Newly Compatible: 3.13, 3.14. No longer compatible 3.9, 3.10 
+- 0.128.0 [Enhancement] add layout default compatible ith DJI 2.5k resolution. Thanks to [@DonkeyShine](https://github.com/DonkeyShine) for suggestion.
+- 0.127.0 [Enhancement] Now support _respiration_ , _front_gear_num_ and _rear_gear_num fields in FIT files. Improved support for using DJI videos as files to be overlaid. 
+  - Thanks to [@prebbz](https://github.com/prebbz) [@DonkeyShine](https://github.com/DonkeyShine) 
 - 0.126.0 [Enhancement] New Motorspeed widgets - "msi" & "msi2" - See examples [docs/xml/examples/07-motor-speed-indicator/README.md](docs/xml/examples/07-motor-speed-indicator/README.md) - Thanks to [@JimmyS83](https://github.com/JimmyS83) for contributing.
   - New metric `accel` which is computed from speed deltas, rather than gopro accelerometer. Thanks also to [@JimmyS83](https://github.com/JimmyS83)
   - [Breaking] Ordering of fields in gopro-to-csv has changed, with addition of `accel` field
@@ -219,24 +234,6 @@ If you find any issues with new releases, please discuss in [GitHub Discussions]
 - 0.118.0 [Enhancement] Local Map Tiles are now cached in memory, so hugely more performant (affects `--map-style local` only)
 - 0.117.0 [Enhancements] Tentative support for Python 3.12. Thanks to [@JimmyS83](https://github.com/JimmyS83) for the suggestion. Also some small bugfixes for waiting for ffmpeg, and also hopefully removing error message about shared memory using `--double-buffer`
 - 0.116.0 [Docker Changes Only] Support GPU in docker image. See [docs/docker.md](docs/docker.md) Thanks to [@danielgv93](https://github.com/danielgv93) for suggestion.
-- 0.115.0 [Fix] Previous smoothing had some issues - hopefully sorted. Many thanks to [@neri14](https://github.com/neri14) for pointing this out. Fixed possible issue with ffmpeg exiting before writing MOOV - sometimes could result in unplayable MP4 files.
-- 0.114.0 [Enhancement] Huge Improvement to usability of speed gauges! - Speed was not being smoothed. Now a kalman filter is applied to speed, giving a much better result.
-See below for before and after. This stops the speed gauges flickering between values. 
-- [Breaking/Minor] Removed the decimal values for altitude & gradient in the default layouts - they were distracting as they changed too much.
-
- ![Speed Gauge Before Smoothing](examples/2023-11-26-speed-no-smoothing.png)
- ![Speed Gauge After Smoothing](examples/2023-11-26-speed-with-smoothing.png)
-
-- 0.113.0 [Enhancement] Add arc gauge - See [Arc Gauge Docs](docs/xml/examples/06-cairo-gauge-arc-annotated/README.md) for examples
-- 0.112.0 [Enhancement] Show loading speed of gopro data.
-- 0.111.0 [Fix] Simple Fix for #157 - timeout when reading large data files. Thanks to [@rpoxo](https://github.com/rpoxo) for raising.  
-- 0.110.0 [Fix] Hopefully make the 'pace' units more robust. New metric format "pace".
-- 0.109.0 [Feature] Support for new GPS9 data type - should give more accurate GPS. Supported on Hero11+
-- 0.108.0 [Fix] GPX/GoPro overlay date checking had been broken for a while. Thanks (very much) to [@IbnGit](https://github.com/IbnGit) for raising
-- 0.107.0 [Feature] New units! - "spm" - steps per minute, and "pace" - see [metrics docs](docs/xml/examples/04-metrics/README.md) for full explanation Thanks [@SlippyJimmy](https://github.com/SlippyJimmy)
-- 0.106.0 [Feature] New map style "cyclosm" - see: https://www.cyclosm.org/ - An OpenStreetmap for cycling - See map examples for more
-- 0.105.0 [Behaviour Change]  Fix [#150](https://github.com/time4tea/gopro-dashboard-overlay/issues/150) cairo circuit map aspect raio is wrong. Thanks [@yuanduopeng](https://github.com/yuanduopeng) for raising.
-- 0.104.0 [Fix] Honour cmdline arg `--show-ffmpeg`
 
 Older changes are in [CHANGELOG.md](CHANGELOG.md)
 

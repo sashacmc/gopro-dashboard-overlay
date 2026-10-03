@@ -4,6 +4,11 @@ units = UnitRegistry()
 units.define("beat = []")
 units.define("bpm = beat / minute")
 units.define("bps = beat / second")
+
+units.define("breath = []")
+units.define("brpm = breath / minute")
+units.define("brps = breath / second")
+
 units.define("steps_per_minute = 0.5 * rpm = spm")
 units.define("pace = minutes / kilometers")
 units.define("pace_km = minutes / kilometers = paceKm")

@@ -1,5 +1,5 @@
 
-name: gopro overlay
+name: Build and Test - Next Python Versions
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [ "3.10", "3.11", "3.12" ]
+        version: [ "3.14" ] # have to specify one version, and 3.15 not there yet.
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +25,14 @@ jobs:
         sudo apt update
     - name: Install dependencies
       run: |
-        sudo apt install fonts-roboto ffmpeg
+        sudo apt install fonts-roboto ffmpeg libcairo2-dev
         PYTHONVERSION=${{matrix.version}} make venv req
     - name: Test with pytest
       run: |
         PYTHONVERSION=${{matrix.version}} make ci
     - name: Upload build artefacts
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: approval-artifacts
         path: ${{ github.workspace }}/tests/approvals/*.png
