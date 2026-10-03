@@ -130,9 +130,13 @@ class FFMPEGGoPro:
 
         creationDateTime = None
         try:
-            creationDateTime = datetime.datetime.fromisoformat(ffprobe_json["format"]["tags"]["creation_time"])
-        except Exception:
-            pass
+            current_tz = datetime.datetime.now(datetime.timezone.utc).astimezone().utcoffset()
+            creationDateTime = datetime.datetime.fromisoformat(
+                ffprobe_json["format"]["tags"]["creation_time"][:-1]
+            ).replace(tzinfo=datetime.timezone(current_tz))
+        except KeyError:
+            pass 
+
 
         return GoproRecording(
             ffmpeg=self.exe,
